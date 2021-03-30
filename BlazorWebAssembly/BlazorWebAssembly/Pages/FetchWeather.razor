@@ -9,41 +9,35 @@
 }
 else
 {
-    var localtime = DateTime.UtcNow.AddSeconds(currentWeather.Timezone);
-    <h1>Weather in <b>@currentWeather.Name</b> at local time @localtime</h1>
+    <h1>Weather in <b>@currentWeather.Name</b> at local time @GetLocalTime()</h1>
 
     <p>This component fetches data from Open Weather Map API.</p>
 
-    var main = currentWeather.Main;
-    var wind = currentWeather.Wind;
-    var sys = currentWeather.Sys;
-    var localizeSunrise = DateTimeOffset.FromUnixTimeSeconds(sys.Sunrise).UtcDateTime.AddSeconds(currentWeather.Timezone);
-    var localizeSunset = DateTimeOffset.FromUnixTimeSeconds(sys.Sunset).UtcDateTime.AddSeconds(currentWeather.Timezone);
     <table class="table">
         <tbody>
             <tr>
                 <td>Temperature</td>
-                <td>@Math.Round(main.Temp, 2) &deg;C</td>
+                <td>@String.Format(decimalFormat, currentWeather.Main.Temp) &deg;C</td>
             </tr>
             <tr>
                 <td>Feels like</td>
-                <td>@Math.Round(main.Feels_Like, 2) &deg;C</td>
+                <td>@String.Format(decimalFormat, currentWeather.Main.Feels_Like) &deg;C</td>
             </tr>
             <tr>
                 <td>Maximum temperature</td>
-                <td>@Math.Round(main.Temp_Max, 2) &deg;C</td>
+                <td>@String.Format(decimalFormat, currentWeather.Main.Temp_Max) &deg;C</td>
             </tr>
             <tr>
                 <td>Minimum temperature</td>
-                <td>@Math.Round(main.Temp_Min, 2) &deg;C</td>
+                <td>@String.Format(decimalFormat, currentWeather.Main.Temp_Min) &deg;C</td>
             </tr>
             <tr>
                 <td>Humidity</td>
-                <td>@main.Humidity %</td>
+                <td>@currentWeather.Main.Humidity %</td>
             </tr>
             <tr>
                 <td>Pressure</td>
-                <td>@main.Pressure hPa</td>
+                <td>@currentWeather.Main.Pressure hPa</td>
             </tr>
             <tr>
                 <td>Visibility</td>
@@ -51,7 +45,7 @@ else
             </tr>
             <tr>
                 <td>Wind speed</td>
-                <td>@Math.Round(wind.Speed, 2) m/s</td>
+                <td>@String.Format(decimalFormat, currentWeather.Wind.Speed) m/s</td>
             </tr>
             <tr>
                 <td>Cloudiness</td>
@@ -59,11 +53,11 @@ else
             </tr>
             <tr>
                 <td>Sunrise</td>
-                <td>@localizeSunrise</td>
+                <td>@GetLocalTime(currentWeather.Sys.Sunrise)</td>
             </tr>
             <tr>
                 <td>Sunset</td>
-                <td>@localizeSunset</td>
+                <td>@GetLocalTime(currentWeather.Sys.Sunset)</td>
             </tr>
         </tbody>
     </table>
@@ -78,7 +72,7 @@ else
             </tr>
             <tr>
                 <td>Country code</td>
-                <td>@sys.Country</td>
+                <td>@currentWeather.Sys.Country</td>
             </tr>
         </tbody>
     </table>
@@ -86,13 +80,30 @@ else
 
 @code {
     private CurrentWeather currentWeather;
+    private string decimalFormat = "{0:00.00}";
 
     protected override async Task OnInitializedAsync()
     {
+        var location = "Stockholm";
         var key = Configuration["OpenWeatherMapAPI:Key"];
-        var url = String.Format(Configuration["OpenWeatherMapAPI:Url"], key);
+        var url = String.Format(Configuration["OpenWeatherMapAPI:Url"], location, key);
 
         currentWeather = await Http.GetFromJsonAsync<CurrentWeather>(url);
+    }
+
+    private DateTime GetLocalTime(int? unixTimeSeconds = null)
+    {
+        DateTime utcTime;
+        if (unixTimeSeconds.HasValue)
+        {
+            utcTime = DateTimeOffset.FromUnixTimeSeconds(unixTimeSeconds.Value).UtcDateTime;
+        }
+        else
+        {
+            utcTime = DateTime.UtcNow;
+        }
+
+        return utcTime.AddSeconds(currentWeather.Timezone);
     }
 
     public class CurrentWeather
