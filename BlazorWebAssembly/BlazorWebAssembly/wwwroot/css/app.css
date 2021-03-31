@@ -28,6 +28,14 @@ a, .btn-link {
     box-shadow: 0 0 0 0.2rem rgb(249 62 91 / 50%) !important;
 }
 
+.dropdown-item:active, .dropdown-item:focus, .show > .btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #f93e5b !important;
+    border-color: #f93e5b !important;
+    outline: none !important;
+    box-shadow: none;
+}
+
 app {
     position: relative;
     display: flex;

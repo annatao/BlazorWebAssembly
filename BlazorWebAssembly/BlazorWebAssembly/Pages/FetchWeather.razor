@@ -13,13 +13,16 @@ else
 
     <p>This component fetches data from Open Weather Map API.</p>
 
-    <div class="pb-4">
-        <select class="btn btn-primary" @onchange=UpdatePage>
+    <div class="dropdown pb-4">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @selectedLocation
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             @foreach (var location in locations)
             {
-                <option value=@location>@location</option>
+                <button class="dropdown-item" @onclick="@(() => UpdatePage(location))">@location</button>
             }
-        </select>
+        </div>
     </div>
 
     <table class="table">
@@ -89,16 +92,18 @@ else
     private string decimalFormat = "{0:00.00}";
 
     private List<string> locations = new List<string>() { "Stockholm", "London", "Berlin", "Hawaii", "Hong Kong" };
+    private string selectedLocation;
 
     protected override async Task OnInitializedAsync()
     {
         locations.Sort();
-        await PopulatePage(locations.FirstOrDefault());
+        selectedLocation = locations.FirstOrDefault();
+        await PopulatePage(selectedLocation);
     }
 
-    private async Task UpdatePage(ChangeEventArgs e)
+    private async Task UpdatePage(string location)
     {
-        var selectedLocation = e.Value.ToString();
+        selectedLocation = location;
         await PopulatePage(selectedLocation);
     }
 
