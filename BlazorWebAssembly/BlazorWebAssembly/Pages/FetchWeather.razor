@@ -9,12 +9,25 @@
 }
 else
 {
-    <h1>Weather in <b>@currentWeather.Name</b> at local time @GetLocalTime()</h1>
+    <h1>Current Weather</h1>
 
     <p>This component fetches data from Open Weather Map API.</p>
 
+    <div class="pb-4">
+        <select class="btn btn-primary" @onchange=UpdatePage>
+            @foreach (var location in locations)
+            {
+                <option value=@location>@location</option>
+            }
+        </select>
+    </div>
+
     <table class="table">
         <tbody>
+            <tr>
+                <td>Local time</td>
+                <td>@GetLocalTime(currentWeather.Timezone)</td>
+            </tr>
             <tr>
                 <td>Temperature</td>
                 <td>@String.Format(decimalFormat, currentWeather.Main.Temp) &deg;C</td>
@@ -53,19 +66,12 @@ else
             </tr>
             <tr>
                 <td>Sunrise</td>
-                <td>@GetLocalTime(currentWeather.Sys.Sunrise)</td>
+                <td>@GetLocalTime(currentWeather.Timezone, currentWeather.Sys.Sunrise)</td>
             </tr>
             <tr>
                 <td>Sunset</td>
-                <td>@GetLocalTime(currentWeather.Sys.Sunset)</td>
+                <td>@GetLocalTime(currentWeather.Timezone, currentWeather.Sys.Sunset)</td>
             </tr>
-        </tbody>
-    </table>
-
-    <h2>About @currentWeather.Name</h2>
-
-    <table class="table">
-        <tbody>
             <tr>
                 <td>Coordinate</td>
                 <td>@currentWeather.Coord.Lon, @currentWeather.Coord.Lat</td>
@@ -82,16 +88,29 @@ else
     private CurrentWeather currentWeather;
     private string decimalFormat = "{0:00.00}";
 
+    private List<string> locations = new List<string>() { "Stockholm", "London", "Berlin", "Hawaii", "Hong Kong" };
+
     protected override async Task OnInitializedAsync()
     {
-        var location = "Stockholm";
+        locations.Sort();
+        await PopulatePage(locations.FirstOrDefault());
+    }
+
+    private async Task UpdatePage(ChangeEventArgs e)
+    {
+        var selectedLocation = e.Value.ToString();
+        await PopulatePage(selectedLocation);
+    }
+
+    private async Task PopulatePage(string location)
+    {
         var key = Configuration["OpenWeatherMapAPI:Key"];
         var url = String.Format(Configuration["OpenWeatherMapAPI:Url"], location, key);
 
         currentWeather = await Http.GetFromJsonAsync<CurrentWeather>(url);
     }
 
-    private DateTime GetLocalTime(int? unixTimeSeconds = null)
+    private DateTime GetLocalTime(int timezone, int? unixTimeSeconds = null)
     {
         DateTime utcTime;
         if (unixTimeSeconds.HasValue)
@@ -103,7 +122,7 @@ else
             utcTime = DateTime.UtcNow;
         }
 
-        return utcTime.AddSeconds(currentWeather.Timezone);
+        return utcTime.AddSeconds(timezone);
     }
 
     public class CurrentWeather
