@@ -3,7 +3,7 @@ using Bunit;
 using System;
 using Xunit;
 
-namespace BlazorWebAssemblyTest
+namespace BlazorWebAssemblyTest.Pages
 {
     public class CounterTest
     {
