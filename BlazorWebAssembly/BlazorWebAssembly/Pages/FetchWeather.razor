@@ -20,7 +20,7 @@ else
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             @foreach (var location in locations)
             {
-                <button class="dropdown-item" @onclick="@(() => UpdatePage(location))">@location</button>
+                <button class="dropdown-item" @onclick="@(() => PopulatePage(location))">@location</button>
             }
         </div>
     </div>
@@ -89,29 +89,18 @@ else
 
 @code {
     private CurrentWeather currentWeather;
-    private string decimalFormat = "{0:00.00}";
-
-    private List<string> locations = new List<string>() { "Stockholm", "London", "Berlin", "Hawaii", "Hong Kong" };
     private string selectedLocation;
 
     protected override async Task OnInitializedAsync()
     {
-        locations.Sort();
-        selectedLocation = locations.FirstOrDefault();
-        await PopulatePage(selectedLocation);
+        await PopulatePage();
     }
 
-    private async Task UpdatePage(string location)
+    private async Task PopulatePage(string location = null)
     {
-        selectedLocation = location;
-        await PopulatePage(selectedLocation);
-    }
+        selectedLocation = location ?? locations.FirstOrDefault();
 
-    private async Task PopulatePage(string location)
-    {
-        var key = Configuration["OpenWeatherMapAPI:Key"];
-        var url = String.Format(Configuration["OpenWeatherMapAPI:Url"], location, key);
-
+        var url = String.Format(Configuration["OpenWeatherMapAPIUrl"], selectedLocation);
         currentWeather = await Http.GetFromJsonAsync<CurrentWeather>(url);
     }
 
@@ -193,4 +182,9 @@ else
         public int Sunrise { get; set; }
         public int Sunset { get; set; }
     }
+
+    private string decimalFormat = "{0:00.00}";
+
+    private List<string> locations = new List<string>() { "Stockholm", "London", "Berlin", "Hawaii", "Hong Kong" };
+
 }

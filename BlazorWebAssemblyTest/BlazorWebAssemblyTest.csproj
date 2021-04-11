@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="NUnit" Version="3.13.1" />
+	<PackageReference Include="RichardSzalay.MockHttp" Version="6.0.0" />
     <PackageReference Include="bunit.web" Version="1.0.0-beta-10" />
     <PackageReference Include="bunit.xunit" Version="1.0.0-beta-10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,4 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\BlazorWebAssembly\BlazorWebAssembly\BlazorWebAssembly.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1test_1json__JsonSchema="https://json.schemastore.org/appsettings.json" /></VisualStudio></ProjectExtensions>
 </Project>
