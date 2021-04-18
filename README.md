@@ -3,14 +3,21 @@
 
 📚 This solution contains 2 projects with following components/ helpers
 
-📘 BlazorWebAssembly
+<b>📘 BlazorWebAssembly</b>
+
 📎 Counter (Default)
+
 📎 FetchData (Default)
+
 📎 FetchWeather: connect to OpenWeatherMap API using HttpClient to display weather information
 
 
-📗 BlazorWebAssemblyTest: Bunit & Xunit
+<b>📗 BlazorWebAssemblyTest: Bunit & Xunit </b>
+
 📎 CounterTest: unit test for Counter (Default) component
+
 📎 FetchWeatherTest: unit test for FetchWeather component
+
 📎 MockHttpClientBunitHelpers: support for connection to appSetting.config for unit tests
+
 📎 HttpClientHelper: support for Httpclient class for unit test
