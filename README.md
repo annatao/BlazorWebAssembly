@@ -2,18 +2,16 @@
 🔰🧪 This is to test out Blazer WebAssembly app as a beginner
 
 📚 This solution contains 2 projects with following components/ helpers 
-<br />
-<br />
-<b>📘 BlazorWebAssembly</b>
+
+  <h3>📘 BlazorWebAssembly</h3>
 
 📎 Counter (Default)
 
 📎 FetchData (Default)
 
 📎 FetchWeather: connect to OpenWeatherMap API using HttpClient to display weather information
-<br />
-<br />
-<b>📗 BlazorWebAssemblyTest: Bunit & Xunit </b>
+
+  <h3>📗 BlazorWebAssemblyTest: Bunit & Xunit </h3>
 
 📎 CounterTest: unit test for Counter (Default) component
 
