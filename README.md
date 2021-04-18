@@ -9,7 +9,7 @@
 
 📎 <b>FetchData (Default)</b>
 
-📎 <b>FetchWeather</b> connect to OpenWeatherMap API using HttpClient to display weather information
+📎 <h3>FetchWeather</h3> connect to OpenWeatherMap API using HttpClient to display weather information
 
   <h3>📗 BlazorWebAssemblyTest: Bunit & Xunit </h3>
 
